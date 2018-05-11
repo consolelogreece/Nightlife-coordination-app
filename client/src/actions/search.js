@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const search = request => dispatch => {
-	return axios.post('/api/search', { request })
+	return axios.get(`/api/search/request?request=${request}`)
 	.then(res => {
 		console.log(res.data.results, "1")
 		return res.data.results

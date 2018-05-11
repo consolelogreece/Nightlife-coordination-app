@@ -17,7 +17,7 @@ class Search extends Component {
 	render(){
 		return(	
 			<div>	
-				<Input name="searchtext" value={this.state.searchtext} onChange={this.handlechange}/> <Button primary onClick={() => this.props.search(this.state.searchtext)}>test</Button>
+				<Input name="searchtext" value={this.state.searchtext} onChange={this.handlechange}/> <Button primary onClick={() => this.props.search(encodeURIComponent(this.state.searchtext))}>test</Button>
 			</div>
 		)
 	}

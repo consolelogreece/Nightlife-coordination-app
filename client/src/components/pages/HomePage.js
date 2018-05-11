@@ -3,12 +3,16 @@ import { connect } from 'react-redux'
 import { Button, Input, Form } from 'semantic-ui-react'
 import Search from '../forms/Search'
 import { search } from '../../actions/search'
+import axios from 'axios'
 
 class HomePage extends Component {
 	state={}
 
 	search = request => this.props.search(request).then(() => console.log("search successful"))
 													.catch(err => console.log("search failed"))
+
+
+
 
 
 	render(){
@@ -20,6 +24,9 @@ class HomePage extends Component {
 		)
 	}
 }
+
+
+
 
 
 const mapStateToProps = (state) => {

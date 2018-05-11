@@ -4,30 +4,47 @@ import dotenv from 'dotenv';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
 
+import { search } from './app/search'
+
+import mongoClient from 'mongodb'
+
+let db;
 const app = express();
+
 
 app.use(helmet());
 app.disable('x-powered-by');
 dotenv.config();
-
 app.use(bodyParser.json());
 
 
-app.post('/api/search', (req, res) => {
-	console.log("received")
-	res.status(200).json({results:[
-			{name:"test", id:"example123", going:5, description:"best bar in the uk", imageURL:"imgur.com"},
-			{name:"test1", id:"example1234", going:2, description:"second best bar in the uk", imageURL:"imgur.com"},
-			{name:"test2", id:"example12345", going:15, description:"best bar in london", imageURL:"imgur.com"}
-		]
-	})
+
+mongoClient.connect(process.env.MONGO_URL, (err, database) => {
+	if (err) throw err;
+	console.log("true");
+
+	db = database;
+	app.listen(process.env.PORT || 80, () => console.log("Running on port " + process.env.PORT))
 });
+
+
+
+app.get('/api/search/*', (req, res) => {
+	search(db, req.query.request).then(data => res.json(data))
+								.catch(err => {
+									console.log(err)
+									res.status(400).json({error: "Something went wrong"})
+								})
+});
+
+
 
 app.get('*', (req, res) => {
 	res.send("homepage")
 });
 
 
-app.listen(process.env.PORT || 80, () => console.log("Running on port " + process.env.PORT))
+
+
 
 
