@@ -4,25 +4,23 @@ import axios from 'axios'
 
 export const search = async (databaseObject, request) => {
 
+	let apiResults = await searchAPI(request);
 
-	let apiResults = await searchAPI(request)
+	let apiResultIdArray = apiResults.map(result => result.businessId);
 
-	let apiResultIdArray = apiResults.map(result => result.businessId)
+	let query = await queryDatabase(databaseObject, apiResultIdArray);
 
-	let query = await queryDatabase(databaseObject, apiResultIdArray)
+	let idsFromDb = query.map(business => business.businessId);
 
-	let idsFromDb = query.map(business => business.businessId)
-
-	let existsArrays = getExistsArrays(apiResultIdArray, idsFromDb)
+	let existsArrays = getExistsArrays(apiResultIdArray, idsFromDb);
 
 	let arrayOfDataObjects = createArrayOfObjectsForDbInsertion(existsArrays.notInDb);
 
-	if (arrayOfDataObjects.length !== 0) await insertIntoDb(databaseObject, arrayOfDataObjects)
+	if (arrayOfDataObjects.length !== 0) await insertIntoDb(databaseObject, arrayOfDataObjects);
 
-	let finalSearchData = generateFinalSearchData(query, idsFromDb, apiResults )
+	let finalSearchData = generateFinalSearchData(query, idsFromDb, apiResults);
 
 	return finalSearchData
-
 
 }
 

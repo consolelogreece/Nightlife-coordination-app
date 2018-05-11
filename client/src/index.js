@@ -16,6 +16,8 @@ import App from './App';
 
 const store = createStore(rootreducer, composeWithDevTools(applyMiddleware(thunk)))
 
+
+
 ReactDOM.render(
 
 	<Router>

@@ -4,7 +4,7 @@ import { Button, Input, Form } from 'semantic-ui-react'
 class Search extends Component {
 
 	state={
-		searchtext:""
+		searchtext:"london"
 	}
 
 
