@@ -1,25 +1,57 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { Button, Input, Form, Container, Header, Grid, Image, Rating, Card, Icon} from 'semantic-ui-react'
+import { Button, Image, Rating, Card, Transition} from 'semantic-ui-react'
 import Search from '../forms/Search'
 import { search } from '../../actions/search'
-import axios from 'axios'
+import { going, notGoing } from '../../actions/going'
 
 class HomePage extends Component {
 
-	state={}
+	state={
+		initialLoad:true,
+		going:false  // placeholder. once login/auth is availabe, check ids agaisnt list of already going ids for that user.
+	}
 
-	search = request => this.props.search(request).then()
+	search = request => this.props.search(request).then(this.setState({initialLoad:true}))
 													.catch(err => console.log("search failed"))
+
+	going = request => this.props.going(request)
+
+
+	notGoing = request => this.props.notGoing(request)
 
 
 	handleGoing = (e) => {
-		console.log(e.target.name)
+
+		if (this.state.going) {
+			this.notGoing(e.target.name)
+		} else {
+			this.going(e.target.name)
+		}
+		this.setState({going: !this.state.going})
+
+		if (this.state.initialLoad){
+			this.setState({initialLoad:false})
+		}
+
+	}
+
+
+
+	orderByGoers = data => {
+		const compare = (a, b) => {
+			if (a.businessGoers < b.businessGoers) return 1
+			if (a.businessGoers > b.businessGoers) return -1
+			return 0
+		}
+		return data.sort(compare);
 	}
 
 
 
 	mapData = data => {
+
+		if (this.state.initialLoad) data = this.orderByGoers(data)
 
 		let renderableArray = data.map(result => {
 			let goerTitle;
@@ -35,17 +67,22 @@ class HomePage extends Component {
 					goerTitle = `${result.businessGoers} People are attending`
 				
 			}
-			return(
-				<div key={result.businessId}>
-					<Card >
-						<Image src={result.businessImageUrl} /> 
+				return(		
+		
+					<Card key={result.businessId}>
+						<div style={{'backgroundColor':'#474647','height':'200px', 'width':'auto'}}>
+							{!!result.businessImageUrl 
+								? <Image style={{'height':'200px', "margin":"auto"}} src={result.businessImageUrl} /> 
+								: <h2 style={{'height':'100%', 'justifyContent':'center', 'color':'#d6d6d6', margin:'auto','display':'flex', 'alignItems':'center'}}>No image available</h2>
+							}
+						</div>
 						<Card.Content>
-						  <Card.Header>
+						  <Card.Header href={result.businessUrl}>
 						    {result.businessName}
 						  </Card.Header>
 						  <Card.Meta>
 						    <span className='date'>
-						       <Rating icon='star' rating={result.businessRating} maxRating={5} disabled />
+						       <Rating rating={result.businessRating} maxRating={5} disabled />
 						    </span>
 						  </Card.Meta>
 						   <Card.Description>
@@ -56,11 +93,9 @@ class HomePage extends Component {
 							<Button fluid={true} onClick={(e) => this.handleGoing(e)} name={result.businessId} color='purple'>I'm attending</Button>
 						</Card.Content>
 					</Card>
-				</div>
-			)
 
-
-		})
+				)
+			})
 
 		return renderableArray;
 	}
@@ -68,12 +103,15 @@ class HomePage extends Component {
 
 
 	render(){
+		console.log(this.state.initialLoad)
 		return(	
-			<div>	
-				<h1>home page</h1>
+			<div style={{'margin':"auto", "maxWidth":"1400px", alignItems:'center', justifyContent:'center'}}>	
+				<h1 style={{alignItems:'center'}}>home page</h1>
 				<Search search={this.search}/>
-				<div style={{'margin':"auto", "width":"100%", "maxWidth":"1800px"}}>
-					<h5>{!!this.props.searchResults && this.mapData(this.props.searchResults)}</h5>
+				<div>
+					<Card.Group style={{"margin":"auto", display:'flex', alignItems:'center', justifyContent:'center'}}>
+						{!!this.props.searchResults && this.mapData(this.props.searchResults)}{!this.props.searchResults && <h3>No results</h3>}
+					</Card.Group>				
 				</div>
 			</div>
 		)
@@ -91,4 +129,4 @@ const mapStateToProps = (state) => {
 	}
 }
 
-export default connect(mapStateToProps, { search })(HomePage);
+export default connect(mapStateToProps, { search, going, notGoing })(HomePage);

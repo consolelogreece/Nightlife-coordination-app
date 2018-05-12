@@ -4,7 +4,7 @@ export const search = request => dispatch => {
 	return axios.get(`/api/search/request?request=${request}`)
 	.then(results => {
 		dispatch(userSearched({searchResults:results.data}))
-		return results.data
+		return results.data // may not need
 	})
 	
 

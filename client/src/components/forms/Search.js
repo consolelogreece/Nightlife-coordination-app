@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Button, Input, Form } from 'semantic-ui-react'
+import { Input, Icon } from 'semantic-ui-react'
 
 class Search extends Component {
 
 	state={
-		searchtext:"london"
+		searchtext:"london acton"
 	}
 
 
@@ -16,8 +16,20 @@ class Search extends Component {
 
 	render(){
 		return(	
-			<div>	
-				<Input name="searchtext" value={this.state.searchtext} onChange={this.handlechange}/> <Button primary onClick={() => this.props.search(encodeURIComponent(this.state.searchtext))}>test</Button>
+			<div style={{ display:'flex', alignItems:'center', justifyContent:'center'}}>
+					<Input 
+					style={{'width':'90%'}}
+					placeholder='Search...' 
+					name="searchtext" 
+					value={this.state.searchtext} 
+					onChange={this.handlechange} 
+					icon={<Icon 
+						name='search' 
+						circular 
+						link 
+						onClick={() => this.props.search(encodeURIComponent(this.state.searchtext))}
+						/>}
+					/>					
 			</div>
 		)
 	}

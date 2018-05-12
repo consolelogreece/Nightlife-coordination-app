@@ -29,6 +29,9 @@ mongoClient.connect(process.env.MONGO_URL, (err, database) => {
 
 
 
+
+//Note to self: DISABLE THE AWAIT ON WRITING TO DB. THIS MAKES RESPONSE TAKE LONGER. INSTEAD, JUST RETURN AN ERROR IF THE USER TRIES TO 'GO' TOO SOON AFTER THE DB INSERTS A NEW ENTRY.
+
 app.get('/api/search/*', (req, res) => {
 	search(db, req.query.request).then(data => res.json(data))
 								.catch(err => {
