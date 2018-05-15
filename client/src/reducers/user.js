@@ -10,6 +10,11 @@ export default (state = {}, action = {}) => {
 			return changeGoerReduxState(state, action.businessId, -1)
 
 
+		case "USER_SIGNED_IN":
+			return action.user
+
+		case "USER_SIGNED_UP":
+			return action.user
 
 		default: return state;
 	}
@@ -17,20 +22,20 @@ export default (state = {}, action = {}) => {
 
 
 
+
+
+
+
 const changeGoerReduxState = (state, id, incrementVal) => {
 
 
-	return {...state, searchResults: state.searchResults.map(content => {
+	return ({...state, searchResults: state.searchResults.map(content => {
 		
-		if (content.businessId === id) {
-			return {...content, businessGoers: (content.businessGoers + incrementVal)}
-		} else {
-			return content
-		}
+		return (
+		 		content.businessId === id   ? {...content, businessGoers: (content.businessGoers + incrementVal)}
+										    : content
+		)
 
-		})
+	})})
 }
-
-}
-
 

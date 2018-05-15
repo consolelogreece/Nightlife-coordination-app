@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Input, Icon } from 'semantic-ui-react'
 
-class Search extends Component {
+class SearchForm extends Component {
 
 	state={
 		searchtext:"london acton"
@@ -36,4 +36,4 @@ class Search extends Component {
 }
 
 
-export default Search;
+export default SearchForm;

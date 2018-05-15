@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Button, Image, Rating, Card, Transition} from 'semantic-ui-react'
-import Search from '../forms/Search'
+import SearchForm from '../forms/SearchForm'
 import { search } from '../../actions/search'
 import { going, notGoing } from '../../actions/going'
 
@@ -107,7 +107,7 @@ class HomePage extends Component {
 		return(	
 			<div style={{'margin':"auto", "maxWidth":"1400px", alignItems:'center', justifyContent:'center'}}>	
 				<h1 style={{alignItems:'center'}}>home page</h1>
-				<Search search={this.search}/>
+				<SearchForm search={this.search}/>
 				<div>
 					<Card.Group style={{"margin":"auto", display:'flex', alignItems:'center', justifyContent:'center'}}>
 						{!!this.props.searchResults && this.mapData(this.props.searchResults)}{!this.props.searchResults && <h3>No results</h3>}
