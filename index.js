@@ -20,7 +20,6 @@ dotenv.config();
 app.use(bodyParser.json());
 
 
-
 mongoClient.connect(process.env.MONGO_URL, (err, database) => {
 	if (err) throw err;
 	console.log("true");
@@ -46,9 +45,8 @@ app.post("/api/auth/signin", (req, res) => {
 });
 
 
-
 app.post("/api/auth/signup", (req, res) => {
-	Signup(req, db).then(response => {
+	Signup(req, res, db).then(response => {
 						// create response based on the data returned by Signup function.
 						res.status(response.code).json({type:response.type, message:response.message})
 					})
@@ -59,8 +57,6 @@ app.post("/api/auth/signup", (req, res) => {
 				   	)})
 					
 });
-
-
 
 
 app.get('*', (req, res) => {

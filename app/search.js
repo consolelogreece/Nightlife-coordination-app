@@ -4,23 +4,24 @@ import axios from 'axios'
 
 export const search = async (databaseObject, request) => {
 
-	let apiResults = await searchAPI(request);
+	let apiResults = await searchAPI(request); // make api request
 
-	let apiResultIdArray = apiResults.map(result => result.businessId);
+	let apiResultIdArray = apiResults.map(result => result.businessId); // map api results to array
 
-	let query = await queryDatabase(databaseObject, apiResultIdArray);
+	let query = await queryDatabase(databaseObject, apiResultIdArray); // query database to find which of the results already exist in db
 
-	let idsFromDb = query.map(business => business.businessId);
+	let idsFromDb = query.map(business => business.businessId); // create an array containing ids of business that are already in db
 
-	let existsArrays = getExistsArrays(apiResultIdArray, idsFromDb);
+	let existsArrays = getExistsArrays(apiResultIdArray, idsFromDb); // create object with 2 properties, inDb, and notInDb. Both of these are arrays.
 
-	let arrayOfDataObjects = createArrayOfObjectsForDbInsertion(existsArrays.notInDb);
+	let arrayOfDataObjects = createArrayOfObjectsForDbInsertion(existsArrays.notInDb); // create array containing objects of businesses that arent in database. 
 
-	if (arrayOfDataObjects.length !== 0) await insertIntoDb(databaseObject, arrayOfDataObjects);
+	if (arrayOfDataObjects.length !== 0) await insertIntoDb(databaseObject, arrayOfDataObjects); // If there are some businesses that arent in the database, insert them.
 
-	let finalSearchData = generateFinalSearchData(query, idsFromDb, apiResults);
+	let finalSearchData = generateFinalSearchData(query, idsFromDb, apiResults); // Create an object containing relevent daata that will be returned to the client (response).
 
 	return finalSearchData
+	
 
 }
 
@@ -58,8 +59,6 @@ export const queryDatabase = async (databaseObject, apiResultIdArray) => {
 
   
 }
-
-
 
 
 export const getExistsArrays = (apiResultIdArray, idsFromDb) => {

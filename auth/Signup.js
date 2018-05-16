@@ -2,7 +2,7 @@ import { validateSignupCredentials, generateHash } from './authentication'
 
 
 
-const Signup = (req, databaseObject) => {
+const Signup = (req, res, databaseObject) => {
 	const credentials = req.body.credentials
 	
 	// validateSignUpCredentials function returns 'false' if the credentials are valid. 
@@ -17,7 +17,6 @@ const Signup = (req, databaseObject) => {
 
     const checkEmailInUse = collection.findOne({email:credentials.email})   // Check to see fi email is in use
     const passwordHash = generateHash(credentials.password)  				// generates a password hash
-
     	
     // Perform all async tasks concurrently. Quicker response time than doing them in series. 
     return Promise.all([checkEmailInUse, passwordHash]).then(([checkEmailInUse, passwordHash]) => {
@@ -33,7 +32,7 @@ const Signup = (req, databaseObject) => {
     	else return addToDatabase(credentials, passwordHash, collection)
     				.then(data => {console.log(data.result); return ({type:"general", message:"Account successfully created!", code:200})})
     				.catch(err => ({type:"general", message:"something went wrong", code:400}))
-    })  
+    })
 } 
 
 
