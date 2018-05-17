@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { Form, Button, Input } from 'semantic-ui-react'
 import ErrorMessageInline from '../messages/ErrorMessageInline'
+import validator from 'validator'
 
 
 class SignupForm extends Component {
 	state={
 		data:{
-			username:"",
-			password:""
+			email:"1@1.com",
+			password:"1"
 		},
 		loading:false,
 		errors:{}	
@@ -20,7 +21,7 @@ class SignupForm extends Component {
 
 	validateForm = () => {
 		let errors = {};
-		if (this.state.data.username === "") errors.username = "Enter a username"
+		if (!validator.isEmail(this.state.data.email)) errors.email = "Enter a valid email"
 		if (this.state.data.password === "") errors.password = "Enter a password"
 		return errors
 	}
@@ -49,10 +50,10 @@ class SignupForm extends Component {
 		return(
 			<div>
 				<Form onSubmit={() => this.handleSubmit()} loading={loading} error={!!errors.general}>
-					<Form.Field error={(!!errors.username || !!errors.general)}>
-						<label>Username</label>
-						<Input type={"text"} value={data.username} name={'username'} onChange={(e) => this.onChange(e)} />
-						{!!errors.username && <ErrorMessageInline text={errors.username} />}
+					<Form.Field error={(!!errors.email || !!errors.general)}>
+						<label>Email</label>
+						<Input type={"text"} value={data.email} name={'email'} onChange={(e) => this.onChange(e)} />
+						{!!errors.email && <ErrorMessageInline text={errors.email} />}
 					</Form.Field>
 					<Form.Field error={(!!errors.password || !!errors.general)}>
 						<label>Password</label>

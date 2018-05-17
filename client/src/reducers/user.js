@@ -1,7 +1,8 @@
 export default (state = {}, action = {}) => {
 	switch (action.type) {
 		case "USER_SEARCHED":
-			return action.results
+			console.log(action)
+			return {...state, searchResults: action.results.searchResults}
 			
 		case "USER_GOING":
 			return changeGoerReduxState(state, action.businessId, 1)
@@ -11,23 +12,16 @@ export default (state = {}, action = {}) => {
 
 
 		case "USER_SIGNED_IN":
-			return action.user
+			return {...state, userData: action.user.data.data}
 
 		case "USER_SIGNED_UP":
-			return action.user
+			return state
 
 		default: return state;
 	}
 }
 
-
-
-
-
-
-
 const changeGoerReduxState = (state, id, incrementVal) => {
-
 
 	return ({...state, searchResults: state.searchResults.map(content => {
 		

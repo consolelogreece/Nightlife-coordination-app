@@ -6,7 +6,7 @@ import { signin } from '../../actions/auth'
 
 class SigninPage extends Component {
 	state={}
-	signin = data => this.props.signin(data)//.then(() => this.props.history.push('/'))
+	signin = data => this.props.signin(data).then(() => this.props.history.push('/'))
 								
 
 	render(){

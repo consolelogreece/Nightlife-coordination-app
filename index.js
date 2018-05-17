@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 
 import { search } from './app/search'
 import Signup from './auth/Signup'
+import Signin from './auth/signin'
 
 
 import mongoClient from 'mongodb'
@@ -41,17 +42,26 @@ app.get('/api/search/*', (req, res) => {
 
 
 app.post("/api/auth/signin", (req, res) => {
-	res.status(400).json({errors:{general:"Invalid credentials"}});
+	Signin(req, db).then(response => {
+		console.log(response)
+		res.status(response.code).json({type:response.type, message:response.message, data:response.data, errors:response.errors})
+	}).catch(err => {
+	 	// in case of unhandled error, return generic error message
+		console.log(err)
+		res.status(400).json({type:'general', message:'something went wrong', data:null})
+	}) 
+
 });
 
 
 app.post("/api/auth/signup", (req, res) => {
-	Signup(req, res, db).then(response => {
+	Signup(req, db).then(response => {
+
 						// create response based on the data returned by Signup function.
-						res.status(response.code).json({type:response.type, message:response.message})
+						res.status(response.code).json({type:response.type, message:response.message, data:response.data, errors:response.errors})
 					})
 				   .catch(err => {
-				   		console.log(err);
+				   		console.log("==================", err);
 				   		// incase of unhandled error, return general error.
 				   		res.status(400).json({type:"general", message:"Something went wrong"}
 				   	)})

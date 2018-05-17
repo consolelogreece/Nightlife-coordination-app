@@ -9,6 +9,21 @@ export const generateHash = password => {
 }
 
 
+export const isCorrectPassword = (plainTextPassword, passwordHash) => {
+	return bcrypt.compare(plainTextPassword, passwordHash)
+}
+
+
+export const generateJWT = email => {
+
+	return new Promise((resolve, reject) => {
+		jwt.sign({email:email}, process.env.JWT_SECRET, (err,jwt) => {
+			if (jwt) resolve(jwt)
+			else reject(err)
+		})
+	})
+
+}
 
 
 export const validateSignupCredentials = (credentials) => {
@@ -29,7 +44,7 @@ export const validateSignupCredentials = (credentials) => {
 export const validateSigninCredentials = (credentials) => {
 	let errors = {};
 	let errorcount = 0;
-	if (credentials.username === "") {errors.username = "Enter a valid username"; errorcount++}
+	if (!validator.isEmail(credentials.email)) {errors.email = "Enter a valid email"; errorcount++}
 	if (credentials.password === "") {errors.password = "Enter a valid password"; errorcount++}
 
 	if (errorcount === 0) return false
