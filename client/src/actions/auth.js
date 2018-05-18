@@ -3,9 +3,11 @@ import axios from 'axios'
 
 export const signin = credentials => dispatch => {
 	return axios.post('/api/auth/signin', { credentials })
-		.then(data =>{
-		 dispatch(userSignedIn(data))
-		 return data
+		.then(user => {
+			localStorage.nightlifeJWT = user.data.data.JWT;
+			localStorage.nightlifeEmail = user.data.data.email;
+			dispatch(userSignedIn(user.data.data))
+			return user
 		})
 
 }
@@ -19,13 +21,11 @@ export const userSignedIn = (user) => {
 }
 
 
-
-
 export const signup = credentials => dispatch => {
 	return axios.post('/api/auth/signup', { credentials })
 		.then(data =>{
-		 dispatch(userSignedUp(data))
-		 return data
+			 dispatch(userSignedUp(data))
+			 return data
 		})
 
 }

@@ -1,22 +1,21 @@
 import axios from 'axios'
 
 export const going = request => dispatch => {
-	//return axios.post('/api/going/', {request})
-	//then(response => {
-
-		dispatch(userGoing(request))
-		return
-	//})
+	return axios.post('/api/going/', {request})
+		.then(response => {
+			dispatch(userGoing(request))
+			return
+		})
 }
 
 
 
 export const notGoing = request => dispatch => {
-	// return axios.post('/api/notGoing/', {request})
-	// .then(response => {
-		dispatch(userNotGoing(request))
-		return
-	//})
+	return axios.post('/api/notGoing/', {request})
+		.then(response => {
+			dispatch(userNotGoing(request))
+			return
+		})
 }
 
 

@@ -23,7 +23,12 @@ class HomePage extends Component {
 
 	handleGoing = (e) => {
 
-		if (this.state.going) {
+		if (!this.props.isAuthenticated) {
+
+			this.props.history.push('/signin')
+
+		} else {
+			if (this.state.going) {
 			this.notGoing(e.target.name)
 		} else {
 			this.going(e.target.name)
@@ -34,6 +39,10 @@ class HomePage extends Component {
 			this.setState({initialLoad:false})
 		}
 
+
+		}
+
+	
 	}
 
 
@@ -103,9 +112,9 @@ class HomePage extends Component {
 
 
 	render(){
-		console.log(this.state.initialLoad)
 		return(	
 			<div style={{'margin':"auto", "maxWidth":"1400px", alignItems:'center', justifyContent:'center'}}>	
+				{this.props.isAuthenticated ? <h4>logged in</h4> : <h4>Not logged in </h4>}  {/*THIS IS ONLY FOR TESTING SESSION PERSISTENCE. REMOVEABLE.*/}
 				<h1 style={{alignItems:'center'}}>home page</h1>
 				<SearchForm search={this.search}/>
 				<div>

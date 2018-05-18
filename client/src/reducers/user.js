@@ -12,7 +12,7 @@ export default (state = {}, action = {}) => {
 
 
 		case "USER_SIGNED_IN":
-			return {...state, userData: action.user.data.data}
+			return {...state, token: action.user.JWT, email:action.user.email}
 
 		case "USER_SIGNED_UP":
 			return state
