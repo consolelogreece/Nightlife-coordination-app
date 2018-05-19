@@ -15,15 +15,26 @@ export const isCorrectPassword = (plainTextPassword, passwordHash) => {
 
 
 export const generateJWT = email => {
-
 	return new Promise((resolve, reject) => {
 		jwt.sign({email:email}, process.env.JWT_SECRET, (err,jwt) => {
 			if (jwt) resolve(jwt)
-			else reject(err)
+			else reject(false)
 		})
 	})
-
 }
+
+
+export const verifyJWT = token => {
+	return new Promise((resolve, reject) => {
+		jwt.verify(token, process.env.JWT_SECRET, (err, data) => {
+			if (err) reject (null)
+			else resolve(data)
+
+		})
+	})
+}
+
+
 
 
 export const validateSignupCredentials = (credentials) => {

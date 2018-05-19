@@ -8,6 +8,7 @@ import { search } from './app/search'
 import Signup from './auth/Signup'
 import Signin from './auth/signin'
 
+import going, { getGoing } from './app/going'
 
 import mongoClient from 'mongodb'
 
@@ -41,6 +42,42 @@ app.get('/api/search/*', (req, res) => {
 
 
 
+
+
+
+app.post("/api/going", (req, res) => {
+	going(req, db).then(response => {
+							res.status(response.code).json({type:response.type, message:response.message, setStatus:response.setStatus, errors:response.errors, businessId:response.businessId})
+					   })
+					  .catch(err => {
+					  		console.log(err)
+							res.status(400).json({type:"general", message:"Something went wrong"})
+					  })
+});
+
+
+
+
+
+
+app.post("/api/getGoing", (req, res) => {
+	getGoing(req, db).then(response => {
+							res.status(response.code).json({type:response.type, message:response.message, data:response.data, errors:response.errors, })
+					   })
+					  .catch(err => {
+					  		console.log("error: ",err)
+							res.status(400).json({type:"general", message:"Something went wrong"})
+					  })
+});
+
+
+
+
+
+
+
+
+
 app.post("/api/auth/signin", (req, res) => {
 	Signin(req, db).then(response => {
 		console.log(response)
@@ -50,8 +87,11 @@ app.post("/api/auth/signin", (req, res) => {
 		console.log(err)
 		res.status(400).json({type:'general', message:'something went wrong', data:null})
 	}) 
-
 });
+
+
+
+
 
 
 app.post("/api/auth/signup", (req, res) => {
@@ -67,6 +107,10 @@ app.post("/api/auth/signup", (req, res) => {
 				   	)})
 					
 });
+
+
+
+
 
 
 app.get('*', (req, res) => {

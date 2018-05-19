@@ -1,5 +1,3 @@
-import testResults from './testResults'
-
 import axios from 'axios'
 
 export const search = async (databaseObject, request) => {

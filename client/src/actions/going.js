@@ -3,31 +3,44 @@ import axios from 'axios'
 export const going = request => dispatch => {
 	return axios.post('/api/going/', {request})
 		.then(response => {
-			dispatch(userGoing(request))
-			return
+			switch (response.data.setStatus) {
+				case "going":
+						dispatch(userGoing(response))
+						break
+				case "notGoing":
+						dispatch(userNotGoing(response))
+						break 
+				default:
+
+			}
+			return response.data.setStatus
 		})
 }
 
-
-
-export const notGoing = request => dispatch => {
-	return axios.post('/api/notGoing/', {request})
-		.then(response => {
-			dispatch(userNotGoing(request))
-			return
-		})
-}
-
-
-
-export const userGoing = (businessId) => ({
+export const userGoing = request => ({
 	type: "USER_GOING",
-	businessId
+	request
 })
 
 
 
-export const userNotGoing = (businessId) => ({
+export const userNotGoing = request => ({
 	type: "USER_NOT_GOING",
-	businessId
+	request
 })
+
+
+
+
+export const getGoing = request => {
+	return axios.post('/api/getGoing/', { request })
+}
+
+
+export const userGetGoing = request => {
+	return ({
+		type:"GET_GOING",
+		request
+	})
+
+}

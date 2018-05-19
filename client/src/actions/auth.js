@@ -4,8 +4,10 @@ import axios from 'axios'
 export const signin = credentials => dispatch => {
 	return axios.post('/api/auth/signin', { credentials })
 		.then(user => {
+			console.log(user.data.data.going)
 			localStorage.nightlifeJWT = user.data.data.JWT;
 			localStorage.nightlifeEmail = user.data.data.email;
+			localStorage.nightlifeGoingArray = user.data.data.going;
 			dispatch(userSignedIn(user.data.data))
 			return user
 		})
@@ -37,3 +39,17 @@ export const userSignedUp = (user) => {
 		user
 	})
 }
+
+
+
+export const logout = () => dispatch => {
+	localStorage.clear();
+	dispatch(userLoggedOut())
+}
+
+
+export const userLoggedOut = () => ({
+	type:"USER_SIGNED_OUT"
+});
+
+

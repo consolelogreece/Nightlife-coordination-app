@@ -4,7 +4,8 @@ import { Input, Icon } from 'semantic-ui-react'
 class SearchForm extends Component {
 
 	state={
-		searchtext:"london acton"
+		searchtext:"london acton",
+		loading:false
 	}
 
 
@@ -12,12 +13,19 @@ class SearchForm extends Component {
 		this.setState({...this.state, [e.target.name]:e.target.value})
 	}
 
-	
+
+	handleSearch = () => {
+		
+		this.setState({loading:true})
+		
+		this.props.search(encodeURIComponent(this.state.searchtext)).then(() => this.setState({loading:false}))
+	}
+
 
 	render(){
 		return(	
 			<div style={{ display:'flex', alignItems:'center', justifyContent:'center'}}>
-					<Input 
+					<Input loading={this.state.loading} 
 					style={{'width':'90%'}}
 					placeholder='Search...' 
 					name="searchtext" 
@@ -27,7 +35,7 @@ class SearchForm extends Component {
 						name='search' 
 						circular 
 						link 
-						onClick={() => this.props.search(encodeURIComponent(this.state.searchtext))}
+						onClick={() => this.handleSearch()}
 						/>}
 					/>					
 			</div>

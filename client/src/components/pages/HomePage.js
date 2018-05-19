@@ -3,51 +3,37 @@ import { connect } from 'react-redux'
 import { Button, Image, Rating, Card, Transition} from 'semantic-ui-react'
 import SearchForm from '../forms/SearchForm'
 import { search } from '../../actions/search'
-import { going, notGoing } from '../../actions/going'
+import { going } from '../../actions/going'
 
 class HomePage extends Component {
 
 	state={
-		initialLoad:true,
-		going:false  // placeholder. once login/auth is availabe, check ids agaisnt list of already going ids for that user.
+		initialLoad:true
 	}
 
-	search = request => this.props.search(request).then(this.setState({initialLoad:true}))
-													.catch(err => console.log("search failed"))
+	search = request =>  this.props.search(request).then(this.setState({initialLoad:true}))							   			
+								   				   .catch(err => console.log("search failed"))
 
-	going = request => this.props.going(request)
-
-
-	notGoing = request => this.props.notGoing(request)
+	going = request => this.props.going(request).then(status => console.log(status))
 
 
-	handleGoing = (e) => {
+	handleGoing = e => {
 
 		if (!this.props.isAuthenticated) {
-
-			this.props.history.push('/signin')
-
+		    this.props.history.push('/signin')
 		} else {
-			if (this.state.going) {
-			this.notGoing(e.target.name)
-		} else {
-			this.going(e.target.name)
+		    this.going({businessId:e.target.name, token:this.props.token})
+		    if (this.state.initialLoad) {
+		        this.setState({
+		            initialLoad: false
+		        })
+		    }
 		}
-		this.setState({going: !this.state.going})
-
-		if (this.state.initialLoad){
-			this.setState({initialLoad:false})
-		}
-
-
-		}
-
-	
 	}
-
 
 
 	orderByGoers = data => {
+
 		const compare = (a, b) => {
 			if (a.businessGoers < b.businessGoers) return 1
 			if (a.businessGoers > b.businessGoers) return -1
@@ -61,8 +47,7 @@ class HomePage extends Component {
 	mapData = data => {
 
 		if (this.state.initialLoad) data = this.orderByGoers(data)
-
-		let renderableArray = data.map(result => {
+		return data.map(result => {
 			let goerTitle;
 
 			switch (result.businessGoers){
@@ -76,8 +61,9 @@ class HomePage extends Component {
 					goerTitle = `${result.businessGoers} People are attending`
 				
 			}
+
 				return(		
-		
+					
 					<Card key={result.businessId}>
 						<div style={{'backgroundColor':'#474647','height':'200px', 'width':'auto'}}>
 							{!!result.businessImageUrl 
@@ -99,22 +85,19 @@ class HomePage extends Component {
 					      </Card.Description>
 						</Card.Content>
 						<Card.Content extra>
-							<Button fluid={true} onClick={(e) => this.handleGoing(e)} name={result.businessId} color='purple'>I'm attending</Button>
+							<Button fluid={true} onClick={(e) => this.handleGoing(e)} name={result.businessId} color='purple'>{this.props.goingArray.includes(result.businessId) ? "Cancel" : "Attend" }</Button>
 						</Card.Content>
 					</Card>
 
 				)
 			})
-
-		return renderableArray;
 	}
 
 
 
 	render(){
 		return(	
-			<div style={{'margin':"auto", "maxWidth":"1400px", alignItems:'center', justifyContent:'center'}}>	
-				{this.props.isAuthenticated ? <h4>logged in</h4> : <h4>Not logged in </h4>}  {/*THIS IS ONLY FOR TESTING SESSION PERSISTENCE. REMOVEABLE.*/}
+			<div style={{'margin':"auto", "maxWidth":"1400px", alignItems:'center', justifyContent:'center'}}>		
 				<h1 style={{alignItems:'center'}}>home page</h1>
 				<SearchForm search={this.search}/>
 				<div>
@@ -128,14 +111,13 @@ class HomePage extends Component {
 }
 
 
-
-
-
 const mapStateToProps = (state) => {
 	return {
 		isAuthenticated: !!state.user.token,
+		token: state.user.token,
+		goingArray: state.user.going,
 		searchResults: state.user.searchResults
 	}
 }
 
-export default connect(mapStateToProps, { search, going, notGoing })(HomePage);
+export default connect(mapStateToProps, { search, going })(HomePage);

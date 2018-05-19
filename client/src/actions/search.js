@@ -8,10 +8,6 @@ export const search = request => dispatch => {
 	})
 	
 
-		
-		
-
-
 	//catch statement handeled at the initial call. Errors bubble up.
 
 }

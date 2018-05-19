@@ -21,7 +21,7 @@ const Signin = async (req, databaseObject) => {
 
 	const generatedJWT = await generateJWT(email) // generate jwt
 
-	return {type:"success", data:{email:email, JWT: generatedJWT}, message:"Signin successful", code:200, errors:null} // return send jwt to client
+	return {type:"success", data:{email:email, JWT:generatedJWT, going:userData.going}, message:"Signin successful", code:200, errors:null} // return send jwt to client
 	
 }
 
