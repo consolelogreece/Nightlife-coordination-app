@@ -4,7 +4,7 @@ import { Input, Icon } from 'semantic-ui-react'
 class SearchForm extends Component {
 
 	state={
-		searchtext:"london acton",
+		searchtext:"newcastle",
 		loading:false
 	}
 

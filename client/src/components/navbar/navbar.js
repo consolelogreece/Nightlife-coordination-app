@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Segment, Loader, Button, Form, Menu } from 'semantic-ui-react';
+import { Menu } from 'semantic-ui-react';
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
@@ -50,11 +50,7 @@ class NavBar extends Component {
 
 	            	</Menu>
 	            )
-
 	            }
-
-
-	        	
         	</div>
         )
     }
