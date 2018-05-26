@@ -7,6 +7,7 @@ import bodyParser from 'body-parser';
 import { search } from './app/search'
 import Signup from './auth/Signup'
 import Signin from './auth/signin'
+import Changepassword from './auth/Changepassword'
 
 import going, { getGoing } from './app/going'
 
@@ -15,12 +16,9 @@ import mongoClient from 'mongodb'
 let db;
 const app = express();
 
-
 app.use(helmet());
-app.disable('x-powered-by');
 dotenv.config();
 app.use(bodyParser.json());
-
 
 mongoClient.connect(process.env.MONGO_URL, (err, database) => {
 	if (err) throw err;
@@ -107,6 +105,17 @@ app.post("/api/auth/signup", (req, res) => {
 				   	)})
 					
 });
+
+
+app.post('/api/auth/changepassword', (req, res) => {
+	Changepassword(req, db).then(response => {
+		res.status(response.code).json({type:response.type, message:response.message, data:response.data, errors:response.errors})
+	})
+	.catch(err => {
+		console.log(err, "133414234252356345673457345634563465463456546546346")
+		res.status(400).json({type:'general', message:'something went wrong', data:null})
+	})
+})
 
 
 
