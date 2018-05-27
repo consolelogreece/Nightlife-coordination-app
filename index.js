@@ -112,7 +112,7 @@ app.post('/api/auth/changepassword', (req, res) => {
 		res.status(response.code).json({type:response.type, message:response.message, data:response.data, errors:response.errors})
 	})
 	.catch(err => {
-		console.log(err, "133414234252356345673457345634563465463456546546346")
+		console.log(err)
 		res.status(400).json({type:'general', message:'something went wrong', data:null})
 	})
 })
