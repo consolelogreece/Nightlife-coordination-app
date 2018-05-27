@@ -3,11 +3,13 @@ import path from 'path';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
+import nodemailer from 'nodemailer'
 
 import { search } from './app/search'
 import Signup from './auth/Signup'
 import Signin from './auth/signin'
 import Changepassword from './auth/Changepassword'
+import Resetpassword from './auth/Resetpassword'
 
 import going, { getGoing } from './app/going'
 
@@ -20,6 +22,7 @@ app.use(helmet());
 dotenv.config();
 app.use(bodyParser.json());
 
+//create database object
 mongoClient.connect(process.env.MONGO_URL, (err, database) => {
 	if (err) throw err;
 	console.log("true");
@@ -27,6 +30,12 @@ mongoClient.connect(process.env.MONGO_URL, (err, database) => {
 	db = database;
 	app.listen(process.env.PORT || 80, () => console.log("Running on port " + process.env.PORT))
 });
+
+//create tansporter object for sending emails
+let transporter = {}//nodemailer.createTransport()
+
+
+
 
 //Note to self: DISABLE THE AWAIT ON WRITING TO DB. THIS MAKES RESPONSE TAKE LONGER. INSTEAD, JUST RETURN AN ERROR IF THE USER TRIES TO 'GO' TOO SOON AFTER THE DB INSERTS A NEW ENTRY.
 
@@ -78,7 +87,6 @@ app.post("/api/getGoing", (req, res) => {
 
 app.post("/api/auth/signin", (req, res) => {
 	Signin(req, db).then(response => {
-		console.log(response)
 		res.status(response.code).json({type:response.type, message:response.message, data:response.data, errors:response.errors})
 	}).catch(err => {
 	 	// in case of unhandled error, return generic error message
@@ -117,9 +125,15 @@ app.post('/api/auth/changepassword', (req, res) => {
 	})
 })
 
-
-
-
+app.post('/api/auth/resetpassword', (req, res) => {
+	 Resetpassword(req, db, transporter).then(response => {
+		res.status(200)
+	})
+	.catch(err => {
+		console.log(err)
+		res.status(400)
+	})
+})
 
 
 app.get('*', (req, res) => {

@@ -49,7 +49,8 @@ class SignupForm extends Component {
 
 		return(
 			<div>
-				<Form onSubmit={() => this.handleSubmit()} loading={loading} error={!!errors.general}>
+			<h3>Sign in </h3>
+				<Form loading={loading} error={!!errors.general}>
 					<Form.Field error={(!!errors.email || !!errors.general)}>
 						<label>Email</label>
 						<Input type={"text"} value={data.email} name={'email'} onChange={(e) => this.onChange(e)} />
@@ -63,7 +64,7 @@ class SignupForm extends Component {
 					<Form.Field>
 						{!!errors.general && <ErrorMessageInline text={errors.general} />}
 					</Form.Field>
-					<Button>Submit</Button>
+					<Button primary onClick={() => this.handleSubmit()}>Sign in</Button> <Button onClick={() => this.props.setReset()}>Reset password</Button>
 					
 				</Form>		
 			</div>

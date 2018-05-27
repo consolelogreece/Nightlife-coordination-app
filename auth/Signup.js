@@ -43,7 +43,8 @@ const addToDatabase = (credentials, passwordHash, collection) => {
 		email:credentials.email,
 		username:credentials.username,
 		passwordHash:passwordHash,
-		going:[]
+		going:[],
+		resetHash:null
 	}
 
 	// upsert and $setOnInsert to make sure no duplicates, incase 2 people try to make an account with the same email at the same time, only one will be created, the other will be ignored. 

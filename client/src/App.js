@@ -9,9 +9,6 @@ import Navbar from './components/navbar/navbar'
 
 
 const PrivateRoute = ({isAuthenticated, component: Component, ...rest}) => {
-
-      console.log("aa", ...rest)
-
     return (
       <Route
         {...rest}
@@ -28,18 +25,35 @@ const PrivateRoute = ({isAuthenticated, component: Component, ...rest}) => {
     )
 };
 
+const NotLoggedInOnlyRoute = ({isAuthenticated, component: Component, ...rest}) => {
+    return (
+      <Route
+        {...rest}
+        render={props =>
+           isAuthenticated ? (
+            <Redirect
+              to="/"   
+            />
+          ) : (
+            <Component {...props} />
+          ) 
+        }
+      />
+    )
+};
+
 
 class App extends Component {
   render() {
     return (
     	 <div className="App">
             <Navbar />
-			<Switch>
-                <Route path="/signup" exact component={SignupPage} />
-                <Route path="/signin" exact component={SigninPage} />
+			 <Switch>
+                <NotLoggedInOnlyRoute isAuthenticated={this.props.isAuthenticated} path="/signup" exact component={SignupPage} />
+                <NotLoggedInOnlyRoute isAuthenticated={this.props.isAuthenticated} path="/signin" exact component={SigninPage} />
                 <PrivateRoute isAuthenticated={this.props.isAuthenticated} path="/changepassword" exact component={PasswordChangePage} />
 				<Route path="/" component={HomePage} />
-    		</Switch>
+    		 </Switch>
     	</div>
     	          
     );

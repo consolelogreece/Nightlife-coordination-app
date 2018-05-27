@@ -23,6 +23,16 @@ export const generateJWT = email => {
 	})
 }
 
+export const generateJWTWithExpiration = (email, expiration) => {
+	return new Promise((resolve, reject) => {
+		jwt.sign({email:email}, process.env.JWT_SECRET, (err,jwt) => {
+			if (jwt) resolve(jwt)
+			else reject(false)
+		})
+	})
+}
+
+
 
 export const verifyJWT = token => {
 	return new Promise((resolve, reject) => {

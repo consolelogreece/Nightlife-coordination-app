@@ -42,16 +42,19 @@ class PasswordChangeForm extends Component {
 			<div onChange={(e) => this.handleChange(e)}>
 				<Form onSubmit={() => this.handleSubmit()}>
 					<Form.Field error={!!errors.oldPass}>
+						<label>Password</label>
 						<Input name="oldPass"  value={data.oldPass} />
 						{!!errors.oldPass && <ErrorMessageInline text={errors.oldPass} />}
 					</Form.Field>
 
 					<Form.Field error={!!errors.newPass}>
+						<label>New password</label>
 						<Input name="newPass" value={data.newPass} />
 						{!!errors.newPass && <ErrorMessageInline text={errors.newPass} />}
 					</Form.Field>
 
 					<Form.Field error={!!errors.confirmPass}>
+						<label>Confirm new password</label>
 						<Input name="confirmPass" value={data.confirmPass} />
 						{!!errors.confirmPass && <ErrorMessageInline text={errors.confirmPass} />}
 					</Form.Field>	

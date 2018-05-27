@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router} from 'react-router-dom'
+import { BrowserRouter as Router, Route} from 'react-router-dom'
 import registerServiceWorker from './registerServiceWorker';
 
 import rootreducer from './rootreducer'
@@ -36,11 +36,13 @@ if (localStorage.nightlifeJWT) {
 
 ReactDOM.render(
 
-	<Router>
+	
 		<Provider store={store}>
-			<App />		
-		</Provider>
-	</Router>,
+			<Router>
+				<Route component={App} />	
+			</Router>	
+		</Provider>,
+	
 	 document.getElementById('root')
 );
 

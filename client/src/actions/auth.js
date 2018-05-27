@@ -54,8 +54,12 @@ export const userLoggedOut = () => ({
 
 
 export const changePassword = credentials => dispatch => {
-	return axios.post('/api/auth/changePassword', { credentials }).then(data => {
+	return axios.post('/api/auth/changepassword', { credentials }).then(data => {
 		localStorage.clear();
 		dispatch(userLoggedOut()) // essentially want to log out the user after changing password.
 	})
+}
+
+export const resetPassword = credentials => {
+	axios.post('/api/auth/resetpassword', {credentials})
 }

@@ -75,7 +75,7 @@ class SigninForm extends Component {
 
 					<Form.Field error={(!!errors.confirmPassword || !!errors.general)}>
 						<label>Confirm Password</label>
-						<Input type={"text"} value={data.confirmPassword} name={'confirmPassword'} onChange={(e) => this.onChange(e)} />
+						<Input type={"password"} value={data.confirmPassword} name={'confirmPassword'} onChange={(e) => this.onChange(e)} />
 						{!!errors.confirmPassword && <ErrorMessageInline text={errors.confirmPassword} />}
 					</Form.Field>
 
