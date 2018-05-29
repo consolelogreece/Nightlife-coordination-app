@@ -1,7 +1,8 @@
-import { generateJWTWithExpiration } from './authentication'
+import { generateResetPasswordJWT } from './authentication'
+import resetEmailTemplate from '../email_templates/PasswordResetTemplate'
+
 const ResetPassword = async (req, databaseObject, transporterObject) => {
 
-	console.log(req.body)
 	//need to set up emailing still using nodemailer. still set to {} in index
 	let userEmail = req.body.credentials.email
 
@@ -12,24 +13,21 @@ const ResetPassword = async (req, databaseObject, transporterObject) => {
 
 	if (!userData) return
 
-	const resetHash = await generateJWTWithExpiration(userEmail, "1h")
+	const resetHash = await generateResetPasswordJWT(userEmail, "1h")
 
 	await collection.updateOne({email:userEmail}, {$set:{resetHash:resetHash}})
 
+	const urlOrigin = req.headers.origin
+
+	//generate email object
+	const generatedEmail = resetEmailTemplate(urlOrigin, userEmail, process.env.SMTP_SERVER_EMAIL, userData.username, resetHash)
+
 	//send reset link
-	
-	return true
+	return transporterObject.sendMail(generatedEmail)
+
 
 	
 }
 
 export default ResetPassword
 
-
-/*
-
- if email exists, create token, store in db, and send token, in a url, via email.
- when the user clicks on the reset link, with the token in the url, they're taken to a password reset screen (pass/confirm pass).
- on submission of new password. if the token matches the token in the db, the password is set as the submitted pass
-
-*/

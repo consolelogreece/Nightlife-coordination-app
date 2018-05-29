@@ -25,14 +25,26 @@ app.use(bodyParser.json());
 //create database object
 mongoClient.connect(process.env.MONGO_URL, (err, database) => {
 	if (err) throw err;
-	console.log("true");
 
 	db = database;
 	app.listen(process.env.PORT || 80, () => console.log("Running on port " + process.env.PORT))
 });
 
-//create tansporter object for sending emails
-let transporter = {}//nodemailer.createTransport()
+
+let smtpConfig = {
+    host: process.env.SMTP_SERVER_NAME,
+    port: process.env.SMTP_SERVER_PORT,
+    connectionTimeout:3000,
+    auth: {
+        user: process.env.SMTP_USERNAME,
+        pass: process.env.SMTP_PASSWORD
+    }
+};
+
+
+
+
+let transporter = nodemailer.createTransport(smtpConfig)
 
 
 
@@ -125,13 +137,14 @@ app.post('/api/auth/changepassword', (req, res) => {
 	})
 })
 
+
 app.post('/api/auth/resetpassword', (req, res) => {
 	 Resetpassword(req, db, transporter).then(response => {
-		res.status(200)
+		res.status(200).end()
 	})
 	.catch(err => {
 		console.log(err)
-		res.status(400)
+		res.status(400).end()
 	})
 })
 
