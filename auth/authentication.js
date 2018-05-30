@@ -25,7 +25,7 @@ export const generateJWT = email => {
 
 export const generateResetPasswordJWT = (email, expiration) => {
 	return new Promise((resolve, reject) => {
-		jwt.sign({email:email}, process.env.JWT_RESET_SECRET, (err,jwt) => {
+		jwt.sign({email:email}, process.env.JWT_RESET_SECRET, { expiresIn: expiration }, (err,jwt) => {
 			if (jwt) resolve(jwt)
 			else reject(false)
 		})
@@ -34,10 +34,10 @@ export const generateResetPasswordJWT = (email, expiration) => {
 
 
 
-export const verifyJWT = token => {
+export const verifyJWT = (token, secret) => {
 	return new Promise((resolve, reject) => {
-		jwt.verify(token, process.env.JWT_SECRET, (err, data) => {
-			if (err) reject (null)
+		jwt.verify(token, secret, (err, data) => {
+			if (err) reject (err)
 			else resolve(data)
 
 		})
@@ -61,7 +61,6 @@ export const validateSignupCredentials = (credentials) => {
 }
 
 
-
 export const validateSigninCredentials = (credentials) => {
 	let errors = {};
 	let errorcount = 0;
@@ -76,6 +75,12 @@ export const validateSigninCredentials = (credentials) => {
 export const validateChangePassword = (credentials) => {
 
 	if (credentials.oldPass === "") return true
+	if (credentials.newPass === "") return true
+	if (credentials.confirmPass !== credentials.newPass) return true
+	return false
+}
+
+export const validateResetPassword = credentials => {
 	if (credentials.newPass === "") return true
 	if (credentials.confirmPass !== credentials.newPass) return true
 	return false

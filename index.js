@@ -9,7 +9,8 @@ import { search } from './app/search'
 import Signup from './auth/Signup'
 import Signin from './auth/signin'
 import Changepassword from './auth/Changepassword'
-import Resetpassword from './auth/Resetpassword'
+import Resetpassword from './auth/ResetPassword'
+import Resetpasswordrequestemail from './auth/Resetpasswordrequestemail'
 
 import going, { getGoing } from './app/going'
 
@@ -138,13 +139,29 @@ app.post('/api/auth/changepassword', (req, res) => {
 })
 
 
-app.post('/api/auth/resetpassword', (req, res) => {
-	 Resetpassword(req, db, transporter).then(response => {
+app.post('/api/auth/resetpasswordrequestemail', (req, res) => {
+	 Resetpasswordrequestemail(req, db, transporter).then(response => {
 		res.status(200).end()
 	})
 	.catch(err => {
 		console.log(err)
 		res.status(400).end()
+	})
+})
+
+app.post('/api/auth/resetpassword', (req, res) => {
+	 Resetpassword(req, db).then(response => {
+		res.status(response.code).json({type:response.type, message:response.message, data:response.data, errors:response.errors})
+	})
+	.catch(err => {
+		console.log(err)
+		if (err.name === "TokenExpiredError") {
+			res.status(400).json({type:'token', message:'Token expired, please request another.', data:null})
+		} else {
+			res.status(400).json({type:'general', message:'something went wrong', data:null})
+		}
+		
+		
 	})
 })
 

@@ -4,14 +4,12 @@ import axios from 'axios'
 export const signin = credentials => dispatch => {
 	return axios.post('/api/auth/signin', { credentials })
 		.then(user => {
-			console.log(user.data.data.going)
 			localStorage.nightlifeJWT = user.data.data.JWT;
 			localStorage.nightlifeEmail = user.data.data.email;
 			localStorage.nightlifeGoingArray = user.data.data.going;
 			dispatch(userSignedIn(user.data.data))
 			return user
 		})
-
 }
 
 
@@ -58,8 +56,13 @@ export const changePassword = credentials => dispatch => {
 		localStorage.clear();
 		dispatch(userLoggedOut()) // essentially want to log out the user after changing password.
 	})
+	.catch(data => Promise.reject(data))
+}
+
+export const resetPasswordRequestEmail = credentials => {
+	axios.post('/api/auth/resetpasswordrequestemail', {credentials})
 }
 
 export const resetPassword = credentials => {
-	axios.post('/api/auth/resetpassword', {credentials})
+	return axios.post('/api/auth/resetpassword', {credentials})
 }

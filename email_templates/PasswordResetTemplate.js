@@ -1,5 +1,5 @@
 const template = (urlOrigin, emailTo, emailFrom, username, resetHash) => {
-	const url = urlOrigin + "resetpassword/page?token=" + resetHash;
+	const url = `http://${urlOrigin}/resetpassword/page?token=${resetHash}`;
 
 	let message = {
 	    from: emailFrom,

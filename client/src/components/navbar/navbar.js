@@ -18,12 +18,17 @@ class NavBar extends Component {
 		        			content="Home"
 		        			as={Link} to="/"
 		        		/>
+		        		<Menu.Item position={"right"}>
+			        		<Menu.Item
+			        			content="Change password"
+			        			as={Link} to="/changepassword"
+			        		/>
 
-
-		        		<Menu.Item position={"right"}
-		        			content="Log out"
-		        			onClick={() => this.props.logout()}
-		        		/>
+			        		<Menu.Item
+			        			content="Log out"
+			        			onClick={() => this.props.logout()}
+			        		/>
+		        		</Menu.Item>
 
 	            	</Menu>
 	            ) : (

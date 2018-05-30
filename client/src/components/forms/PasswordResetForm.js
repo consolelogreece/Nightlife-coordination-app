@@ -1,15 +1,17 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Input, Form, Button } from 'semantic-ui-react'
 import ErrorMessageInline from '../messages/ErrorMessageInline'
 import SuccessMessageInline from '../messages/SuccessMessageInline'
-import validator from 'validator'
 
 class PasswordResetForm extends Component {
+	
 	state={
 		data:{
-			email:""
+			newPass:"",
+			confirmPass:""
 		},
-		sent:false,
+		success:false,
 		errors:{},
 		loading:false
 	}
@@ -20,42 +22,53 @@ class PasswordResetForm extends Component {
 
 	handleSubmit = () => {
 		const errors = this.validate()
-		this.setState({errors:errors}, () => {
-			if (Object.keys(this.state.errors).length === 0) {
-				this.props.resetPassword({...this.state.data})
-				this.setState({sent:true})
 
-			}
+		this.setState({errors:errors, success:false, loading:true}, () => {
+			if (Object.keys(this.state.errors).length === 0) this.props.ResetPassword({...this.state.data, token:this.props.resetToken})
+				.then(() => this.setState({success:true, loading:false}))
+				.catch(err => {
+					this.setState({
+						loading:false, 
+						errors:{[err.response.data.type]:err.response.data.message}
+					})
+				})
+			else this.setState({loading:false, errors:{...errors}})
 		})	
 	}
 
 	validate = () => {
 		let errors = {}
 		const {newPass, confirmPass} = this.state.data
-		if (!validator.isEmail(this.state.data.email)) errors.email = "Enter a valid email"
+		if (newPass === "") errors["newPass"] = "cant be blank"
+		if (confirmPass !== newPass) errors["confirmPass"] = "Passwords don't match"
 		return errors
 	}
 
 
 	render(){
-		const { data, loading, errors, sent } = this.state
-
-	
+		const { data, loading, errors, success } = this.state
 		return(
-			<div onChange={(e) => this.handleChange(e)}>
-			<h3> Reset password </h3>
-				<Form>
-					<Form.Field error={(!!errors.email || !!errors.general)}>
-						<label>Email</label>
-						<Input type={"text"} value={data.email} name={'email'} onChange={(e) => this.handleChange(e)} />
-						{!!errors.email && <ErrorMessageInline text={errors.email} />}
-						{!!sent && <SuccessMessageInline text={"A reset link will be sent if the email exists"} />}
+			<div>
+				<Form error={errors.general && errors.general.toString()} loading={loading} onChange={(e) => this.handleChange(e)}>
+					<Form.Field error={!!errors.newPass}>
+						<label>New password</label>
+						<Input name="newPass" type="password" value={data.newPass} />
+						{!!errors.newPass && <ErrorMessageInline text={errors.newPass} />}
 					</Form.Field>
-					<Button primary onClick={() => this.handleSubmit()}>Send reset email</Button> <Button onClick={() => this.props.setReset()}>Back</Button>		
-				</Form>
+
+					<Form.Field error={!!errors.confirmPass}>
+						<label>Confirm new password</label>
+						<Input type="password" name="confirmPass" value={data.confirmPass} />
+						{!!errors.confirmPass && <ErrorMessageInline text={errors.confirmPass} />}
+					</Form.Field>	
+					{success && <SuccessMessageInline text="Password change successful!" />}
+					{errors.general && <ErrorMessageInline text={errors.general} />}  
+				</Form>	
+				<Button primary onClick={() => this.handleSubmit()}>Change password</Button>
 			</div>
 
 		)
 	}
 }
-export default PasswordResetForm
+
+export default connect(null)(PasswordResetForm)

@@ -6,7 +6,7 @@ const going = async (req, databaseObject) => {
 
 	if (!businessId) return Promise.reject(null)
 
-	const checkValidAndGetData = await verifyJWT(token)
+	const checkValidAndGetData = await verifyJWT(token, process.env.JWT_SECRET)
 	if (!checkValidAndGetData) {
 		return({type:"general", message:"You are not authorized to perform this action", code:400, setStatus:null, data:null, errors:{general:"Not authorized"}})
 	}
@@ -35,7 +35,7 @@ export const getGoing = async (request, databaseObject) => {
 	
 	const token = request.body.request
 
-	const checkValidAndGetData = await verifyJWT(token)
+	const checkValidAndGetData = await verifyJWT(token, process.env.JWT_SECRET)
 
 	if (checkValidAndGetData) {
 		

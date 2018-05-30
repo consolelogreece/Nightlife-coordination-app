@@ -1,33 +1,39 @@
-import { generateResetPasswordJWT } from './authentication'
-import resetEmailTemplate from '../email_templates/PasswordResetTemplate'
+import { verifyJWT, validateResetPassword, generateHash } from './authentication'
 
-const ResetPassword = async (req, databaseObject, transporterObject) => {
+const Resetpassword = async (req, databaseObject) => {
 
-	//need to set up emailing still using nodemailer. still set to {} in index
-	let userEmail = req.body.credentials.email
+	const responseUnauthorized = ({type:"general", message:"You are not authorized to perform this action", code:400, data:null, errors:{general:"Not authorized"}})
 
-	const db = databaseObject.db(process.env.MONGO_DATABASE);       		// get database
-    const collection = db.collection(process.env.MONGO_COLLECTION_USERS);  	// get collection
+	if (validateResetPassword(req.body.credentials)) return responseUnauthorized
 
-	let userData = await collection.findOne({email:userEmail}) // check if email exists
+	const { newPass, confirmPass, token } = req.body.credentials
 
-	if (!userData) return
+	const checkValidAndGetData = await verifyJWT(token, process.env.JWT_RESET_SECRET)
 
-	const resetHash = await generateResetPasswordJWT(userEmail, "1h")
+	if (!checkValidAndGetData) return responseUnauthorized
 
-	await collection.updateOne({email:userEmail}, {$set:{resetHash:resetHash}})
+	const userEmail = checkValidAndGetData.email
 
-	const urlOrigin = req.headers.origin
+	const db = databaseObject.db(process.env.MONGO_DATABASE);       					// get database
+    const userCollection = db.collection(process.env.MONGO_COLLECTION_USERS);  			// get user collection
 
-	//generate email object
-	const generatedEmail = resetEmailTemplate(urlOrigin, userEmail, process.env.SMTP_SERVER_EMAIL, userData.username, resetHash)
+    const storedUserData = userCollection.findOne({email:userEmail})
 
-	//send reset link
-	return transporterObject.sendMail(generatedEmail)
+	const newPasswordHash =  generateHash(newPass)
 
+	return Promise.all([storedUserData, newPasswordHash]).then(([storedUserData, newPasswordHash]) => {
 
-	
+		if (token !== storedUserData.resetHash) return ({type:"general", message:"Invalid token, please request another email.", code:400, data:null, errors:{general:"Not authorized"}})
+
+		return userCollection.updateOne({email:userEmail}, {$set: {passwordHash:newPasswordHash, resetHash:null}}).then(data => {
+			return ({type:"general", message:"Password reset successful", errors:null, code:200, data:null, errors:null})
+		})
+
+	})
+	.catch(err => {
+		return responseUnauthorized
+	})
+
 }
 
-export default ResetPassword
-
+export default Resetpassword

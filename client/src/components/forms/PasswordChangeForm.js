@@ -21,6 +21,7 @@ class PasswordChangeForm extends Component {
 		const errors = this.validate()
 		this.setState({errors:errors}, () => {
 			if (Object.keys(this.state.errors).length === 0) this.props.changePassword({...this.state.data, token:this.props.token})
+				.catch(err => this.setState({errors:err.response.data.errors}))
 		})	
 	}
 
@@ -29,7 +30,7 @@ class PasswordChangeForm extends Component {
 		const {oldPass, newPass, confirmPass} = this.state.data
 		if (oldPass === "") errors["oldPass"] = "cant be blank"
 		if (newPass === "") errors["newPass"] = "cant be blank"
-		if (confirmPass === "") errors["confirmPass"] = "cant be blank"
+		if (confirmPass !== newPass) errors["confirmPass"] = "Passwords don't match"
 		return errors
 	}
 
@@ -40,26 +41,28 @@ class PasswordChangeForm extends Component {
 	
 		return(
 			<div onChange={(e) => this.handleChange(e)}>
-				<Form onSubmit={() => this.handleSubmit()}>
+				<Form errors={errors.general && errors.general.toString()}loading={loading}>
 					<Form.Field error={!!errors.oldPass}>
 						<label>Password</label>
-						<Input name="oldPass"  value={data.oldPass} />
+						<Input name="oldPass" type="password" value={data.oldPass} />
 						{!!errors.oldPass && <ErrorMessageInline text={errors.oldPass} />}
 					</Form.Field>
 
 					<Form.Field error={!!errors.newPass}>
 						<label>New password</label>
-						<Input name="newPass" value={data.newPass} />
+						<Input name="newPass" type="password" value={data.newPass} />
 						{!!errors.newPass && <ErrorMessageInline text={errors.newPass} />}
 					</Form.Field>
 
 					<Form.Field error={!!errors.confirmPass}>
 						<label>Confirm new password</label>
-						<Input name="confirmPass" value={data.confirmPass} />
+						<Input name="confirmPass" type="password" value={data.confirmPass} />
 						{!!errors.confirmPass && <ErrorMessageInline text={errors.confirmPass} />}
 					</Form.Field>	
-					<Button primary>Change password</Button>			
+					{!!errors.general && <ErrorMessageInline text={errors.general} />}
+							
 				</Form>
+				<Button onClick={() => this.handleSubmit()} primary>Change password</Button>	
 			</div>
 
 		)

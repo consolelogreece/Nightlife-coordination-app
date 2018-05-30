@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import SigninForm from '../forms/SigninForm'
-import { signin, resetPassword } from '../../actions/auth'
-import PasswordResetForm from '../forms/PasswordResetForm'
+import { signin, resetPasswordRequestEmail } from '../../actions/auth'
+import PasswordResetRequestForm from '../forms/PasswordResetRequestForm'
 
 class SigninPage extends Component {
 	state={
@@ -10,7 +10,7 @@ class SigninPage extends Component {
 	}
 	signin = data => this.props.signin(data).then(() => this.props.history.push('/'))
 
-	resetpassword = data => resetPassword(data)
+	resetpassword = data =>resetPasswordRequestEmail(data)
 
 	setReset = () => this.setState({reset:!this.state.reset})
 								
@@ -18,7 +18,7 @@ class SigninPage extends Component {
 	render(){
 		return(
 			<div>
-				{this.state.reset ? <PasswordResetForm resetPassword={this.resetpassword} setReset={this.setReset}/> : <SigninForm setReset={this.setReset} signin={this.signin}/>}
+				{this.state.reset ? <PasswordResetRequestForm resetPassword={this.resetpassword} setReset={this.setReset}/> : <SigninForm setReset={this.setReset} signin={this.signin}/>}
 			</div>
 		)
 
@@ -26,12 +26,6 @@ class SigninPage extends Component {
 
 	
 
-}
-
-const mapStateToProps = state => {
-	return {
-		isAuthenticated: !!state.user.token
-	}
 }
 
 export default connect(null, { signin })(SigninPage)

@@ -6,11 +6,9 @@ const changePassword = async (req, databaseObject) => {
 
 	if (validateChangePassword(req.body.credentials)) return responseUnauthorized
 
-		console.log(1)
-
 	const { oldPass, newPass, confirmPass, token } = req.body.credentials
 
-	const checkValidAndGetData = await verifyJWT(token)
+	const checkValidAndGetData = await verifyJWT(token, process.env.JWT_SECRET)
 
 	if (!checkValidAndGetData) return responseUnauthorized
 		
