@@ -7,6 +7,7 @@ import SignupPage from './components/pages/SignupPage'
 import PasswordResetPage from './components/pages/PasswordResetPage'
 import PasswordChangePage from './components/pages/PasswordChangePage'
 import Navbar from './components/navbar/navbar'
+import ErrorMessageInline from './components/messages/ErrorMessageInline'
 
 
 const PrivateRoute = ({isAuthenticated, component: Component, ...rest}) => {
@@ -48,13 +49,14 @@ class App extends Component {
   render() {
     return (
     	 <div className="App">
-            <Navbar />
-			 <Switch>
-                <NotLoggedInOnlyRoute isAuthenticated={this.props.isAuthenticated} path="/signup" exact component={SignupPage} />
-                <NotLoggedInOnlyRoute isAuthenticated={this.props.isAuthenticated} path="/signin" exact component={SigninPage} />
-                <NotLoggedInOnlyRoute isAuthenticated={this.props.isAuthenticated} path="/resetpassword" component={PasswordResetPage} />
-                <PrivateRoute isAuthenticated={this.props.isAuthenticated} path="/changepassword" exact component={PasswordChangePage} />
-				<Route path="/" component={HomePage} />
+          <Navbar />
+            <ErrorMessageInline text={"WARNING: THIS SITE IS NOT HTTP, NOT HTTPS. DO NOT USE YOUR REAL PASSWORDS."} />
+            <Switch>
+            <NotLoggedInOnlyRoute isAuthenticated={this.props.isAuthenticated} path="/signup" exact component={SignupPage} />
+            <NotLoggedInOnlyRoute isAuthenticated={this.props.isAuthenticated} path="/signin" exact component={SigninPage} />
+            <NotLoggedInOnlyRoute isAuthenticated={this.props.isAuthenticated} path="/resetpassword" component={PasswordResetPage} />
+            <PrivateRoute isAuthenticated={this.props.isAuthenticated} path="/changepassword" exact component={PasswordChangePage} />
+  				  <Route path="/" component={HomePage} />
     		 </Switch>
     	</div>
     	          

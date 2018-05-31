@@ -5,6 +5,7 @@ import SearchForm from '../forms/SearchForm'
 import { search } from '../../actions/search'
 import { going } from '../../actions/going'
 
+
 class HomePage extends Component {
 
 	state={
@@ -104,15 +105,7 @@ class HomePage extends Component {
 	render(){
 		
 		return(
-			<div style={{'margin':"auto", "maxWidth":"1400px", alignItems:'center', justifyContent:'center'}}>	
-
-				
-				
-			         
-        		
-
-
-				<button onClick={() => this.setState({visible:!this.state.visible})}>visible</button>
+			<div style={{'margin':"auto", "maxWidth":"1400px", alignItems:'center', justifyContent:'center'}}>
 				<h1 style={{alignItems:'center'}}>home page</h1>
 				<SearchForm search={this.search}/>
 					<div>		
