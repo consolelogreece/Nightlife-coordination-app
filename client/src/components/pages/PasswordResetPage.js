@@ -12,15 +12,15 @@ class PasswordResetPage extends Component {
 
 	componentWillMount(){
 		let parsedUrlObject = queryString.parse(this.props.location.search)
-		if (!Object.prototype.hasOwnProperty.call(parsedUrlObject, 'token')) this.props.history.push("/")
-		else this.setState({token:parsedUrlObject['token']})
+		console.log(parsedUrlObject, this.props.location.search)
+		if (!Object.prototype.hasOwnProperty.call(parsedUrlObject, '?token')) this.props.history.push("/")
+		else this.setState({token:parsedUrlObject['?token']})
 		
 	}
 
-	resetpassword = data => resetPassword(data).then(() => console.log("succeed")) ////////// SERVER SIDE -> VALIDATE TOKEN -> CHANGE PASS -> RETURN SUCCESS -> DISPLAY SUCCESS MSG TO USER//////
+	resetpassword = data => resetPassword(data)
 
 	render(){	
-		console.log(this.state)
 		return(
 			<PasswordResetForm resetToken={this.state.token} ResetPassword={this.resetpassword} />
 		)
@@ -28,3 +28,4 @@ class PasswordResetPage extends Component {
 }
 
 export default connect()(PasswordResetPage)
+
