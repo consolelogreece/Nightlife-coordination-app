@@ -23,7 +23,7 @@ app.use(helmet());
 dotenv.config();
 app.use(bodyParser.json());
 
-app.use(express.static(path.join(__dirname, "client", "build")))
+
 
 //create database object
 mongoClient.connect(process.env.MONGO_URL, (err, database) => {
