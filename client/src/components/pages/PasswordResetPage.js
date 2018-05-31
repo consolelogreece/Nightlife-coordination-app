@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import queryString from 'query-string'
+import queryString from 'querystring'
 import { resetPassword } from '../../actions/auth'
 import PasswordResetForm from '../forms/PasswordResetForm'
 
