@@ -30,7 +30,6 @@ mongoClient.connect(process.env.MONGO_URL, (err, database) => {
 	if (err) throw err;
 
 	db = database;
-	app.listen(process.env.PORT || 80, () => console.log("Running on port " + process.env.PORT))
 });
 
 
@@ -172,6 +171,8 @@ app.get('*', (req, res) => {
 	res.sendFile(path.join(__dirname, "client", "build", "index.html"))
 });
 
+
+app.listen(process.env.PORT || 80, () => console.log("Running on port " + process.env.PORT))
 
 
 
