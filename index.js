@@ -9,7 +9,7 @@ import { search } from './app/search'
 import Signup from './auth/Signup'
 import Signin from './auth/Signin'
 import Changepassword from './auth/Changepassword'
-import Resetpassword from './auth/ResetPassword'
+import Resetpassword from './auth/Resetpassword'
 import Resetpasswordrequestemail from './auth/Resetpasswordrequestemail'
 
 import going, { getGoing } from './app/going'
